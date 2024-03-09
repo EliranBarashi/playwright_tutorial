@@ -1,8 +1,10 @@
 import pytest
 from playwright.sync_api import Playwright
 
+import utils.secret_config
 
-@pytest.fixture
+
+@pytest.fixture(scope="session")
 def set_up(browser):
     # browser = playwright.chromium.launch(headless=False)
     context = browser.new_context()
@@ -14,7 +16,7 @@ def set_up(browser):
     page.close()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def login_set_up(set_up):
     # browser = playwright.chromium.launch(headless=False)
     # context = browser.new_context()
@@ -27,7 +29,7 @@ def login_set_up(set_up):
     page.get_by_role("button", name="Log in with Email").click()
     page.get_by_test_id("emailAuth").get_by_label("Email").fill("symon.storozhenko@gmail.com")
     page.get_by_test_id("emailAuth").get_by_label("Email").press("Tab")
-    page.get_by_label("Password").fill("test123")
+    page.get_by_label("Password").fill(utils.secret_config.PASSWORD)
     page.get_by_label("Password").press("Enter")
 
     yield page
